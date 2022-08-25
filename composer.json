@@ -1,0 +1,12 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:unetics/makeUpdate.git"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "^7.4",
+    "makeweb/makeupdate": "dev-main"
+  }
+}

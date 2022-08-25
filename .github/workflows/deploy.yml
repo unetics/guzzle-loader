@@ -1,0 +1,42 @@
+name: Create A Deployment
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "latest"
+      - uses: "ramsey/composer-install@v2"
+      - name: Generate ZIP
+        uses: byteever/action-build-zip@master
+        with:
+          filename: 'release.zip'
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: List files build dir
+        run: |
+          ls ${{ github.workspace }}/build
+      - run: echo "🎉 ${{ github.workspace }}/build"
+      - name: Upload bundle
+        uses: bayssmekanique/action-simple-file-upload@v1
+        with:
+          user: ${{ secrets.FTP_USR }}
+          password: ${{ secrets.FTP_PASS }}
+          host: ${{ secrets.FTP_HOST }}
+          src: build/guzzle-loader.zip
+          dest: ratchet/${{github.ref_name}}/guzzle-loader.zip
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy bundle webhook
+        uses: muinmomin/webhook-action@v1.0.0
+        with:
+          url: ${{ secrets.PLUGIN_WEBHOOK }}
+          data: '{ "id": "2088", "access_key": "${{ secrets.PLUGIN_ACCESS_KEY }}", "version": "${{github.ref_name}}", "download": "guzzle-loader/${{github.ref_name}}/guzzle-loader.zip", "changelog": "${{ github.event.head_commit.message }}", "updated_at": "${{ env.TIME }}" }'

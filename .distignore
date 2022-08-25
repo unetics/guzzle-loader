@@ -1,0 +1,6 @@
+.distignore
+.github
+.idea
+.git
+composer.lock
+composer.json
