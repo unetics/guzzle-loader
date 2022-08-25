@@ -5,7 +5,7 @@
     Description: Load Guzzle library (and a few helpers)
     Author: makeweb.com.au
     Author URI: makedev.com.au
-    Version: 1.0.0
+    Version: 1.0.01
     */
 
     if (!defined("ABSPATH")) {  exit; }
